@@ -1,24 +1,40 @@
-"use client"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { FormProvider, useForm } from "react-hook-form"
-import { FormInput } from "@/form-input/index"
-import { toast } from "sonner"
-import { APP_NAME } from "@/constants"
-import Link from "next/link"
+"use client";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { FormProvider, useForm } from "react-hook-form";
+import { FormInput } from "@/form-input/index";
+import { toast } from "sonner";
+import { APP_NAME } from "@/constants";
+import Link from "next/link";
+import { useLogin } from "@/hooks/auth/use-auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginFormData, loginSchema } from "@/schema/auth.schema";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const form = useForm()
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const loginMutation = useLogin();
+
+  const onSubmit = (data: LoginFormData) => {
+    loginMutation.mutate(data);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <FormProvider {...form}>
-            <form className="p-6 md:p-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -26,17 +42,38 @@ export function LoginForm({
                     Login to your {APP_NAME} account
                   </p>
                 </div>
-                <FormInput name="email" label="Email" fieldType="input" placeholder="m@example.com" required />
-                <FormInput name="password" label="Password" fieldType="input" type="password" placeholder="********" required />
-                <Button type="submit" className="w-full" title="Click here to login">
-                  Login
+                <FormInput
+                  name="email"
+                  label="Email"
+                  fieldType="input"
+                  placeholder="m@example.com"
+                  required
+                />
+                <FormInput
+                  name="password"
+                  label="Password"
+                  fieldType="input"
+                  type="password"
+                  placeholder="********"
+                  required
+                />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={loginMutation.isPending}
+                  title="Click here to login"
+                >
+                  {loginMutation.isPending ? "Logging in..." : "Login"}
                 </Button>
                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                   <span className="bg-card text-muted-foreground relative z-10 px-2">
                     Or continue with
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-4" onClick={() => toast.error("Coming soon!")}>
+                <div
+                  className="grid grid-cols-3 gap-4"
+                  onClick={() => toast.error("Coming soon!")}
+                >
                   <Button variant="outline" type="button" className="w-full">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <path
@@ -67,7 +104,10 @@ export function LoginForm({
                 </div>
                 <div className="text-center text-sm">
                   Don&apos;t have an account?{" "}
-                  <Link href="/register" className="underline underline-offset-4">
+                  <Link
+                    href="/register"
+                    className="underline underline-offset-4"
+                  >
                     Sign up
                   </Link>
                 </div>
@@ -84,10 +124,23 @@ export function LoginForm({
           </div>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+      <div className="text-muted-foreground text-center text-xs text-balance">
+        By clicking continue, you agree to our{" "}
+        <Link
+          href="#"
+          className="underline underline-offset-4 hover:text-primary"
+        >
+          Terms of Service
+        </Link>{" "}
+        and{" "}
+        <Link
+          href="#"
+          className="underline underline-offset-4 hover:text-primary"
+        >
+          Privacy Policy
+        </Link>
+        .
       </div>
     </div>
-  )
+  );
 }
