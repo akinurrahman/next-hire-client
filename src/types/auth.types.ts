@@ -1,12 +1,12 @@
 import {  BaseEntity } from "./common.types";
 
-export interface User extends BaseEntity {
+export type User = BaseEntity & {
     email: string;
     fullName: string;
     role: "recruiter" | "candidate" | "admin";
 }
 
-export interface LoginResponse {
+export type LoginResponse = {
     user: User;
     accessToken: string;
     refreshToken: string;
