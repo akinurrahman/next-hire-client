@@ -3,10 +3,16 @@
 import React from 'react'
 import { Sparkles } from 'lucide-react'
 import { AiSuggestion, TipsCard, UploadCard } from '@/components/resume-analysis'
-
+import ResumeSummary from '@/components/resume-analysis/resume-summary'
+import { useResumeAnalysisStore } from '@/stores'
 
 const ResumeUploadPage = () => {
+    const { analysisData } = useResumeAnalysisStore()
 
+    // Extract data from the analysis response
+    const score = analysisData?.data?.score
+    const summary = analysisData?.data?.summary
+    const keywords = analysisData?.data?.keywords
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
@@ -34,9 +40,19 @@ const ResumeUploadPage = () => {
                     </div>
 
                     <div className="grid gap-8 lg:grid-cols-2">
-                        <UploadCard />
+                        {/* Left column: UploadCard + ResumeSummary */}
+                        <div className="space-y-8">
+                            <UploadCard />
+                            {analysisData && (
+                                <ResumeSummary
+                                    score={score}
+                                    summary={summary}
+                                    keywords={keywords}
+                                />
+                            )}
+                        </div>
+                        {/* Right column: AiSuggestion */}
                         <AiSuggestion />
-
                     </div>
 
                     <TipsCard />
