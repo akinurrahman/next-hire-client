@@ -1,7 +1,4 @@
 import React from 'react'
-import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
-import { Download } from 'lucide-react'
 import SuggestionCard from './suggestion-card'
 import { ResumeAnalysisResponse } from '@/types/resume-analysis.types'
 

@@ -1,5 +1,3 @@
-import { AlertCircle, CheckCircle, FileText, Shield, TrendingUp } from "lucide-react";
-
 export const getPriorityColor = (priority: string) => {
   switch (priority) {
     case "high":

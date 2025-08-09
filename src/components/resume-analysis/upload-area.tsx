@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Upload, CheckCircle, Eye, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -128,6 +128,13 @@ const FilePreview = ({
                 Remove
             </Button>
         </div>
+        <input
+            id="file-input"
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={onFileSelect}
+            className="hidden"
+        />
     </div>
 )
 
